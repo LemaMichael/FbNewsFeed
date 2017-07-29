@@ -35,7 +35,7 @@ class FeedCell: BaseCell {
         
         let attributedText = NSMutableAttributedString(string: "Mark Zuckerberg", attributes: [NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
         
-        attributedText.append(NSAttributedString(string: "\nDecember 21  •  San Francisco  • ", attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName : UIColor(red: 155/255, green: 161/255, blue: 171/255, alpha: 1)]))
+        attributedText.append(NSAttributedString(string: "\nDecember 21  •  San Francisco  • ", attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName : UIColor.rgb(red: 155, green: 161, blue: 161)]))
         
         
         //: Increase spacing between lines
@@ -75,7 +75,7 @@ class FeedCell: BaseCell {
     }()
     
     let statusImageView: UIImageView = {
-       let imageView = UIImageView()
+        let imageView = UIImageView()
         imageView.image = UIImage(named: "zuckdog")
         
         //: ScaleAspectFit uses a 1:1 width-height ratio
@@ -87,6 +87,45 @@ class FeedCell: BaseCell {
         return imageView
     }()
     
+    let likesCommentsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "388 Likes   10.7K Comments"
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.textColor = UIColor.rgb(red: 155, green: 161, blue: 171)
+        
+        return label
+    }()
+    
+    
+    let dividerLineView: UIView = {
+       let view = UIView()
+        view.backgroundColor = UIColor.rgb(red: 226, green: 228, blue: 232)
+        return view
+    }()
+    
+    let likeButton =  FeedCell.buttonForTitle(title: "Like", imageName: "like")
+    let commentButton = FeedCell.buttonForTitle(title: "Comment", imageName: "comment")
+    let shareButton = FeedCell.buttonForTitle(title: "Share", imageName: "share")
+    
+    
+    
+    //: We will use this function to create 3 buttons, like, comment and share
+    static func buttonForTitle(title: String, imageName: String) -> UIButton {
+        let button = UIButton()
+        button.setTitleColor(UIColor.rgb(red: 143, green: 150, blue: 163), for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
+        button.setTitle(title, for: .normal)
+        
+        //: spacing from the like button image
+        button.titleEdgeInsets = UIEdgeInsetsMake(0, 8, 0, 0)
+        
+        //: Set the Like button image
+        button.setImage(UIImage(named: imageName), for: .normal)
+        
+        return button
+    }
+    
+    
     override func setUpViews() {
         
         backgroundColor = UIColor.white
@@ -94,6 +133,14 @@ class FeedCell: BaseCell {
         addSubview(profileImageView)
         addSubview(statusTextView)
         addSubview(statusImageView)
+        addSubview(likesCommentsLabel)
+        
+        addSubview(dividerLineView)
+        
+        
+        addSubview(likeButton)
+        addSubview(commentButton)
+        addSubview(shareButton)
         
         addConstraintsWithFormat(format: "H:|-8-[v0(44)]-8-[v1]|", views: profileImageView, nameLabel)
         
@@ -101,9 +148,20 @@ class FeedCell: BaseCell {
         
         addConstraintsWithFormat(format: "H:|[v0]|", views: statusImageView)
         
-        addConstraintsWithFormat(format: "V:|-12-[v0]", views: nameLabel)
-        addConstraintsWithFormat(format: "V:|-8-[v0(44)]-4-[v1(30)]-4-[v2]|", views: profileImageView, statusTextView, statusImageView)
+        addConstraintsWithFormat(format: "H:|-12-[v0]|", views: likesCommentsLabel)
         
+        addConstraintsWithFormat(format: "V:|-12-[v0]", views: nameLabel)
+        
+        addConstraintsWithFormat(format: "H:|-12-[v0]-12-|", views: dividerLineView)
+        
+        //: Button constraints are here - By specifying v0(v2) & v1(v2), it will share the space equally
+        addConstraintsWithFormat(format: "H:|[v0(v2)][v1(v2)][v2]|", views: likeButton, commentButton, shareButton)
+
+        addConstraintsWithFormat(format: "V:|-8-[v0(44)]-4-[v1(30)]-4-[v2]-8-[v3(24)]-8-[v4(0.5)][v5(44)]|", views: profileImageView, statusTextView, statusImageView, likesCommentsLabel, dividerLineView, likeButton)
+        
+        //: Comment Button & Share Button vertical constraint
+        addConstraintsWithFormat(format: "V:[v0(44)]|", views: commentButton)
+        addConstraintsWithFormat(format: "V:[v0(44)]|", views: shareButton)
         
     }
     
