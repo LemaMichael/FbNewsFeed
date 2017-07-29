@@ -20,6 +20,11 @@ class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //: Modifying the navigationBar
+        navigationItem.title = "News Feed"
+        navigationController!.navigationBar.barTintColor = UIColor.rgb(red: 51, green: 90, blue: 149)
+        navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        
         
         let postMark = Post()
         postMark.name = "Mark Zuckerberg"
@@ -47,12 +52,9 @@ class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLa
         postGandhi.numLikes = 123
         postGandhi.numComments = 32
         posts.append(postGandhi)
+    
         
         
-        
-        
-        
-        navigationItem.title = "News Feed"
         collectionView?.backgroundColor = UIColor(white: 0.95, alpha: 1)
         
         collectionView?.alwaysBounceVertical = true

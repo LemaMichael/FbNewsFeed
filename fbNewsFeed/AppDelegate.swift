@@ -20,19 +20,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        
-        let layout = UICollectionViewFlowLayout()
-        let feedController = FeedController(collectionViewLayout: layout)
-        let navigationController = UINavigationController(rootViewController: feedController)
-        window?.rootViewController = navigationController
-        
-        //: Modifying the navigationBar
-        navigationController.navigationBar.barTintColor = UIColor(red: 51/255, green: 90/255, blue: 149/255, alpha: 1)
-        navigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+        //: Using a custom UITabBarController
+        window?.rootViewController = CustomTabBarController()
         
         //: Modify the status bar
         UIApplication.shared.statusBarStyle = .lightContent
         
+        //: Modify the TabBar's item color
+        UITabBar.appearance().tintColor = UIColor.rgb(red: 70, green: 146, blue: 250)
         
         return true
     }

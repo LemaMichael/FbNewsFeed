@@ -104,6 +104,12 @@ class FeedCell: BaseCell {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 14)
         
+        //: I don't want a user to edit the textView
+        textView.isEditable = false
+        
+        //: I don't want the user to select the text and interact with it.
+        textView.isSelectable = false
+        
         //: I don't want the textView to be scrollable
         textView.isScrollEnabled = false
         return textView

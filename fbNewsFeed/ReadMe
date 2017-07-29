@@ -7,3 +7,5 @@ For part two, NSLayoutConstraints were used to add the Like, Comment and Share B
 
 -July 29, 2017
 Part three of app consists of creating Dynamic cells based on the status text of a user.
+
+For part four, a custom UITabBarController was implemented to contain seperate UIViewControllers. 
