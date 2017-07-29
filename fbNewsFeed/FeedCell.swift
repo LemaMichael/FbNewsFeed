@@ -27,31 +27,65 @@ class BaseCell: UICollectionViewCell {
 
 class FeedCell: BaseCell {
     
+    var post: Post? {
+        didSet {
+            
+            //: Set the nameLabel
+            if let name = post?.name {
+                
+                let attributedText = NSMutableAttributedString(string: name, attributes: [NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
+                
+                attributedText.append(NSAttributedString(string: "\nDecember 21  •  San Francisco  • ", attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName : UIColor.rgb(red: 155, green: 161, blue: 161)]))
+                
+                
+                //: Increase spacing between lines
+                let paragraphStyle = NSMutableParagraphStyle()
+                paragraphStyle.lineSpacing = 4
+                
+                attributedText.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, attributedText.string.characters.count))
+                
+                //: Add image globe on the right of the label
+                let attachment = NSTextAttachment()
+                attachment.image = UIImage(named: "globe_small")
+                attachment.bounds = CGRect(x: 0, y: -2, width: 12, height: 12)
+                attributedText.append(NSAttributedString(attachment: attachment))
+                
+                
+                nameLabel.attributedText = attributedText
+            }
+            
+            
+            //: Set the statusTextView
+            if let statusText = post?.statusText {
+                
+                statusTextView.text = statusText
+                
+            }
+         
+            //: Set the profileImageName
+            if let profileImageName = post?.profileImageName {
+                
+                profileImageView.image = UIImage(named: profileImageName)
+
+            }
+            
+            //: Set the statusImageView 
+            if let statusImageName = post?.statusImageName {
+                
+                statusImageView.image = UIImage(named: statusImageName)
+
+            }
+            
+
+        }
+    }
+    
+    
     let nameLabel: UILabel = {
         let label = UILabel()
         
         //: Show two lines of text for the name and location
         label.numberOfLines = 2
-        
-        let attributedText = NSMutableAttributedString(string: "Mark Zuckerberg", attributes: [NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
-        
-        attributedText.append(NSAttributedString(string: "\nDecember 21  •  San Francisco  • ", attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName : UIColor.rgb(red: 155, green: 161, blue: 161)]))
-        
-        
-        //: Increase spacing between lines
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 4
-        
-        attributedText.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, attributedText.string.characters.count))
-        
-        //: Add image globe on the right of the label
-        let attachment = NSTextAttachment()
-        attachment.image = UIImage(named: "globe_small")
-        attachment.bounds = CGRect(x: 0, y: -2, width: 12, height: 12)
-        attributedText.append(NSAttributedString(attachment: attachment))
-        
-        
-        label.attributedText = attributedText
         
         return label
     }()
@@ -60,7 +94,6 @@ class FeedCell: BaseCell {
     let profileImageView: UIImageView = {
         let imageView = UIImageView()
         //: 1:1 aspect ratio
-        imageView.image = UIImage(named: "zuckprofile")
         imageView.contentMode = .scaleAspectFit
         imageView.backgroundColor = UIColor.red
         return imageView
@@ -69,14 +102,15 @@ class FeedCell: BaseCell {
     
     let statusTextView: UITextView = {
         let textView = UITextView()
-        textView.text = "Hello everyone, meet my dog"
         textView.font = UIFont.systemFont(ofSize: 14)
+        
+        //: I don't want the textView to be scrollable
+        textView.isScrollEnabled = false
         return textView
     }()
     
     let statusImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "zuckdog")
         
         //: ScaleAspectFit uses a 1:1 width-height ratio
         //imageView.contentMode = .scaleAspectFit
@@ -156,8 +190,9 @@ class FeedCell: BaseCell {
         
         //: Button constraints are here - By specifying v0(v2) & v1(v2), it will share the space equally
         addConstraintsWithFormat(format: "H:|[v0(v2)][v1(v2)][v2]|", views: likeButton, commentButton, shareButton)
-
-        addConstraintsWithFormat(format: "V:|-8-[v0(44)]-4-[v1(30)]-4-[v2]-8-[v3(24)]-8-[v4(0.5)][v5(44)]|", views: profileImageView, statusTextView, statusImageView, likesCommentsLabel, dividerLineView, likeButton)
+        
+        //: All views have a static height except for the statusTextView
+        addConstraintsWithFormat(format: "V:|-8-[v0(44)]-4-[v1]-4-[v2(200)]-8-[v3(24)]-8-[v4(0.5)][v5(44)]|", views: profileImageView, statusTextView, statusImageView, likesCommentsLabel, dividerLineView, likeButton)
         
         //: Comment Button & Share Button vertical constraint
         addConstraintsWithFormat(format: "V:[v0(44)]|", views: commentButton)

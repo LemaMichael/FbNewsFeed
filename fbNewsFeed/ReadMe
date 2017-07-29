@@ -4,3 +4,6 @@ This clone is based on the tutorial from LetsBuildThatApp.com
 Part one of the Facebook feed clone is now completed. The profile Image, status text, name label, and status Image are added to each cell using NSLayoutConstraints.
 
 For part two, NSLayoutConstraints were used to add the Like, Comment and Share Buttons onto the UICollectionViewCell.
+
+-July 29, 2017
+Part three of app consists of creating Dynamic cells based on the status text of a user.
