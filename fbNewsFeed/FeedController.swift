@@ -20,39 +20,71 @@ class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLa
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        //: parse file
+        if let path = Bundle.main.path(forResource: "all_posts", ofType: "json") {
+            
+            do {
+                
+                
+                let data = try(Data(contentsOf: URL(fileURLWithPath: path), options: NSData.ReadingOptions.mappedIfSafe))
+                
+                let jsonDictionary = try(JSONSerialization.jsonObject(with: data, options: .mutableContainers)) as? [String: Any]
+                
+                
+                if let postsArray = jsonDictionary?["posts"] as? [[String : Any]] {
+                    
+                    self.posts = [Post]()
+                    
+                    for postDictionary in postsArray {
+                        let post = Post()
+                        post.setValuesForKeys(postDictionary)
+                        self.posts.append(post)
+                    }
+                }
+                
+            } catch let err {
+                print(err)
+                
+            }
+        }
+        
+
+        
         //: Modifying the navigationBar
         navigationItem.title = "News Feed"
         navigationController!.navigationBar.barTintColor = UIColor.rgb(red: 51, green: 90, blue: 149)
         navigationController!.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         
-        
-        let postMark = Post()
-        postMark.name = "Mark Zuckerberg"
-        postMark.statusText =  "I think a simple rule of business is, if you do the things that are easier first, then you can actually make a lot of progress."
-        postMark.profileImageName = "zuckprofile"
-        postMark.statusImageName = "zuckdog"
-        postMark.numLikes = 9996
-        postMark.numComments = 340
-        posts.append(postMark)
-        
-        let postSteve = Post()
-        postSteve.name = "Steve Jobs"
-        postSteve.statusText = "Being the richest man in the cemetery doesn't matter to me. Going to bed at night saying we've done something wonderful, that's what matters to me.\n\n" + "Sometimes when you innovate, you make mistakes. It is best to admit them quickly, and get on with improving your other innovations.\n\n" + "Innovation distinguishes between a leader and a follower."
-        postSteve.profileImageName = "steve_profile"
-        postSteve.statusImageName = "steve_status"
-        postSteve.numLikes = 230
-        postSteve.numComments = 1045
-        posts.append(postSteve)
-        
-        let postGandhi = Post()
-        postGandhi.name = "Mahatma Gandhi"
-        postGandhi.profileImageName = "gandhi_profile"
-        postGandhi.statusText = "Live as if you were to die tomorrow; learn as if you were to live forever.\n" + "The weak can never forgive. Forgiveness is the attribute of the strong.\n" + "Happiness is when what you think, what you say, and what you do are in harmony."
-        postGandhi.statusImageName = "gandhi_status"
-        postGandhi.numLikes = 123
-        postGandhi.numComments = 32
-        posts.append(postGandhi)
-        
+        /*
+         //: Will be parsing a file to get data instead.
+         let postMark = Post()
+         postMark.name = "Mark Zuckerberg"
+         postMark.statusText =  "I think a simple rule of business is, if you do the things that are easier first, then you can actually make a lot of progress."
+         postMark.profileImageName = "zuckprofile"
+         postMark.statusImageName = "zuckdog"
+         postMark.numLikes = 9996
+         postMark.numComments = 340
+         posts.append(postMark)
+         
+         let postSteve = Post()
+         postSteve.name = "Steve Jobs"
+         postSteve.statusText = "Being the richest man in the cemetery doesn't matter to me. Going to bed at night saying we've done something wonderful, that's what matters to me.\n\n" + "Sometimes when you innovate, you make mistakes. It is best to admit them quickly, and get on with improving your other innovations.\n\n" + "Innovation distinguishes between a leader and a follower."
+         postSteve.profileImageName = "steve_profile"
+         postSteve.statusImageName = "steve_status"
+         postSteve.numLikes = 230
+         postSteve.numComments = 1045
+         posts.append(postSteve)
+         
+         let postGandhi = Post()
+         postGandhi.name = "Mahatma Gandhi"
+         postGandhi.profileImageName = "gandhi_profile"
+         postGandhi.statusText = "Live as if you were to die tomorrow; learn as if you were to live forever.\n" + "The weak can never forgive. Forgiveness is the attribute of the strong.\n" + "Happiness is when what you think, what you say, and what you do are in harmony."
+         postGandhi.statusImageName = "gandhi_status"
+         postGandhi.numLikes = 123
+         postGandhi.numComments = 32
+         posts.append(postGandhi)
+         */
         
         
         collectionView?.backgroundColor = UIColor(white: 0.95, alpha: 1)

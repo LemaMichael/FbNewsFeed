@@ -42,21 +42,27 @@ class FeedCell: BaseCell {
                 
                 let attributedText = NSMutableAttributedString(string: name, attributes: [NSFontAttributeName : UIFont.boldSystemFont(ofSize: 14)])
                 
-                attributedText.append(NSAttributedString(string: "\nDecember 21  •  San Francisco  • ", attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName : UIColor.rgb(red: 155, green: 161, blue: 161)]))
                 
+                //: Set the city and state
                 
-                //: Increase spacing between lines
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.lineSpacing = 4
-                
-                attributedText.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, attributedText.string.characters.count))
-                
-                //: Add image globe on the right of the label
-                let attachment = NSTextAttachment()
-                attachment.image = UIImage(named: "globe_small")
-                attachment.bounds = CGRect(x: 0, y: -2, width: 12, height: 12)
-                attributedText.append(NSAttributedString(attachment: attachment))
-                
+                if let state = post?.location?.state, let city = post?.location?.city {
+                    
+                    attributedText.append(NSAttributedString(string: "\n\(city), \(state)  •  ", attributes: [NSFontAttributeName : UIFont.systemFont(ofSize: 12), NSForegroundColorAttributeName : UIColor.rgb(red: 155, green: 161, blue: 161)]))
+                    
+                    
+                    //: Increase spacing between lines
+                    let paragraphStyle = NSMutableParagraphStyle()
+                    paragraphStyle.lineSpacing = 4
+                    
+                    attributedText.addAttribute(NSParagraphStyleAttributeName, value: paragraphStyle, range: NSMakeRange(0, attributedText.string.characters.count))
+                    
+                    //: Add image globe on the right of the label
+                    let attachment = NSTextAttachment()
+                    attachment.image = UIImage(named: "globe_small")
+                    attachment.bounds = CGRect(x: 0, y: -2, width: 12, height: 12)
+                    attributedText.append(NSAttributedString(attachment: attachment))
+                    
+                }
                 
                 nameLabel.attributedText = attributedText
             }
@@ -68,22 +74,25 @@ class FeedCell: BaseCell {
                 statusTextView.text = statusText
                 
             }
-         
+            
             //: Set the profileImageName
             if let profileImageName = post?.profileImageName {
                 
                 profileImageView.image = UIImage(named: profileImageName)
-
+                
             }
             
-            //: Set the statusImageView 
+            //: Set the statusImageView
             if let statusImageName = post?.statusImageName {
                 
                 statusImageView.image = UIImage(named: statusImageName)
-
+                
             }
             
-
+            //: Set the likesCommentsLabel
+            if let numLikes = post?.numLikes, let numComments = post?.numComments {
+                likesCommentsLabel.text = "\(numLikes) Likes  \(numComments) Comments"
+            }
         }
     }
     
@@ -139,7 +148,6 @@ class FeedCell: BaseCell {
     
     let likesCommentsLabel: UILabel = {
         let label = UILabel()
-        label.text = "388 Likes   10.7K Comments"
         label.font = UIFont.systemFont(ofSize: 12)
         label.textColor = UIColor.rgb(red: 155, green: 161, blue: 171)
         
@@ -148,7 +156,7 @@ class FeedCell: BaseCell {
     
     
     let dividerLineView: UIView = {
-       let view = UIView()
+        let view = UIView()
         view.backgroundColor = UIColor.rgb(red: 226, green: 228, blue: 232)
         return view
     }()

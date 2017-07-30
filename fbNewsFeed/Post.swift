@@ -10,11 +10,28 @@ import Foundation
 import UIKit
 
 
-class Post {
+class Post : SafeJsonObject {
     var name: String?
     var statusText: String?
     var profileImageName: String?
     var statusImageName: String?
-    var numLikes: Int?
-    var numComments: Int?
+    
+    //: Changed numLikes & numComments types to NSNumber for parsing purposes
+    var numLikes: NSNumber?
+    var numComments: NSNumber?
+    
+    var location: Location?
+    
+    override func setValue(_ value: Any?, forKey key: String) {
+        if key == "location" {
+            location = Location()
+            location?.setValuesForKeys(value as! [String : Any])
+        }
+        else {
+            super.setValue(value, forKey: key)
+        }
+    }
+    
 }
+
+
