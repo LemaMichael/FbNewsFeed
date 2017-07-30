@@ -27,6 +27,13 @@ class BaseCell: UICollectionViewCell {
 
 class FeedCell: BaseCell {
     
+    //: We need a reference to the FeedController
+    var feedController: FeedController?
+    
+    func animatePhoto() {
+        feedController?.animateImageView(statusImageView: statusImageView)
+    }
+    
     var post: Post? {
         didSet {
             
@@ -124,6 +131,9 @@ class FeedCell: BaseCell {
         
         //: Cut off the extended pixels
         imageView.layer.masksToBounds = true
+        
+        //: We want to add a gesture recognizer for imageView, therefore make it user interactable
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -182,6 +192,9 @@ class FeedCell: BaseCell {
         addSubview(commentButton)
         addSubview(shareButton)
         
+        //: For when the statusImageView is tapped
+        statusImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(animatePhoto)))
+        
         addConstraintsWithFormat(format: "H:|-8-[v0(44)]-8-[v1]|", views: profileImageView, nameLabel)
         
         addConstraintsWithFormat(format: "H:|-4-[v0]-4-|", views: statusTextView)
@@ -205,7 +218,5 @@ class FeedCell: BaseCell {
         addConstraintsWithFormat(format: "V:[v0(44)]|", views: shareButton)
         
     }
-    
-    
     
 }

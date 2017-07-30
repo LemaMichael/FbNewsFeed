@@ -13,7 +13,7 @@ import UIKit
 class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     let cellId = "cellId"
-
+    
     
     var posts = [Post]()
     
@@ -52,7 +52,7 @@ class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLa
         postGandhi.numLikes = 123
         postGandhi.numComments = 32
         posts.append(postGandhi)
-    
+        
         
         
         collectionView?.backgroundColor = UIColor(white: 0.95, alpha: 1)
@@ -75,6 +75,8 @@ class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! FeedCell
         
         cell.post = posts[indexPath.item]
+        
+        cell.feedController = self
         
         return cell
     }
@@ -111,6 +113,124 @@ class FeedController: UICollectionViewController, UICollectionViewDelegateFlowLa
         //: When you change the size of the device, invalidate the layout and redraw the collectionView completely.
         collectionView?.collectionViewLayout.invalidateLayout()
     }
+    
+    
+    var statusImageView: UIImageView?
+    let zoomImageView = UIImageView()
+    //: The following line will be used to display a black view when an image is tapped
+    let blackBackgroundView = UIView()
+    let navBarCoverView = UIView()
+    let tabBarCoverView = UIView()
+    
+    
+    
+    //: To animate statusImageView
+    func animateImageView(statusImageView: UIImageView) {
+        
+        self.statusImageView = statusImageView
+        
+        if let startingFrame = statusImageView.superview?.convert(statusImageView.frame, to: nil) {
+            
+            //: Make the original image in the cell completely transparent
+            statusImageView.alpha = 0
+            
+            
+            //: Set the blackBackgroumdView
+            blackBackgroundView.frame = self.view.frame
+            blackBackgroundView.backgroundColor = UIColor.black
+            blackBackgroundView.alpha = 0
+            view.addSubview(blackBackgroundView)
+            
+            //: Cover the navigation bar when the user taps the statusImage (20 pixels for the status bar and 44 pixels for the nav. bar
+            navBarCoverView.frame = CGRect(x: 0, y: 0, width: 1000, height: 20 + 44)
+            navBarCoverView.backgroundColor = UIColor.black
+            navBarCoverView.alpha = 0
+            
+            
+            //: We need to cover the navBar & TabBar and adding them to the view won't help. The following line will help us accomplish our desire.
+            if let keyWindow = UIApplication.shared.keyWindow {
+                
+                //: Cover the tabBar when the user taps the statusImage, the tab bar is roughly 49 pixels
+                tabBarCoverView.frame = CGRect(x: 0, y: (keyWindow.frame.height - 49), width: 1000, height: 49)
+                tabBarCoverView.backgroundColor = UIColor.black
+                tabBarCoverView.alpha = 0
+                
+                keyWindow.addSubview(navBarCoverView)
+                keyWindow.addSubview(tabBarCoverView)
+            }
+            
+            
+            zoomImageView.frame = startingFrame
+            zoomImageView.isUserInteractionEnabled = true
+            zoomImageView.image = statusImageView.image
+            //: Without the following line of code, the image will be compressed
+            zoomImageView.contentMode = .scaleAspectFill
+            zoomImageView.clipsToBounds = true
+            view.addSubview(zoomImageView)
+            
+            
+            
+            //: Animate the view to move its position to the center
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+                
+                //: W1/W2 = H1/H2, therefore the new height will be h2 = h1 (w2 / w1)
+                let height = startingFrame.height * (self.view.frame.width / startingFrame.width)
+                
+                let yPosition = (self.view.frame.height / 2) - (height / 2)
+                self.zoomImageView.frame = CGRect(x: 0, y: yPosition, width: self.view.frame.width, height: height)
+                
+                self.blackBackgroundView.alpha = 1
+                self.navBarCoverView.alpha = 1
+                self.tabBarCoverView.alpha = 1
+            }, completion: nil)
+            
+            
+            //: For when the user taps the image again
+            zoomImageView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(zoomOutPhoto)))
+            
+        }
+        
+    }
+    
+    
+    
+    
+    func zoomOutPhoto() {
+        
+        if let startingFrame = statusImageView!.superview?.convert(statusImageView!.frame, to: nil) {
+            
+            
+            UIView.animate(withDuration: 0.75, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0.5, options: .curveEaseOut, animations: {
+                
+                //: Put image back to its initial position
+                self.zoomImageView.frame = startingFrame
+                
+                //: Set the blackBackgroundView, navBarCoverView & tabBarCoverView alpha to be transparent
+                self.blackBackgroundView.alpha = 0
+                self.navBarCoverView.alpha = 0
+                self.tabBarCoverView.alpha = 0
+                
+            }, completion: { (didComplete) in
+                //: Now that the user tapped the new image (zoomImageView) again, remove it from the superview along with the black colored views
+                self.zoomImageView.removeFromSuperview()
+                self.blackBackgroundView.removeFromSuperview()
+                self.navBarCoverView.removeFromSuperview()
+                self.tabBarCoverView.removeFromSuperview()
+                
+                //: Set the original statusImage's alpha back to 1
+                self.statusImageView?.alpha = 1
+            })
+            
+            
+            
+        }
+        
+    }
+    
+    
+    
+    
+    
     
     
 }
