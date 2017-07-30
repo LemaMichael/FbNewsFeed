@@ -29,6 +29,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //: Modify the TabBar's item color
         UITabBar.appearance().tintColor = UIColor.rgb(red: 70, green: 146, blue: 250)
         
+        //: Modify navigationBar color & title text color
+        UINavigationBar.appearance().barTintColor = UIColor.rgb(red: 51, green: 90, blue: 149)
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+    
         return true
     }
 

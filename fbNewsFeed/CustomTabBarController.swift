@@ -35,8 +35,6 @@ class CustomTabBarController: UITabBarController {
         let thirdNavigationController = UINavigationController(rootViewController: messengerController)
         thirdNavigationController.title = "Messenger"
         thirdNavigationController.tabBarItem.image = UIImage(named: "messenger_icon")
-        thirdNavigationController.navigationBar.barTintColor = UIColor.rgb(red: 51, green: 90, blue: 149)
-        thirdNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         
         
         let notificationController = UIViewController()
@@ -44,8 +42,6 @@ class CustomTabBarController: UITabBarController {
         let fourthNavigationController = UINavigationController(rootViewController: notificationController)
         fourthNavigationController.title = "Notifications"
         fourthNavigationController.tabBarItem.image = UIImage(named: "globe_icon")
-        fourthNavigationController.navigationBar.barTintColor = UIColor.rgb(red: 51, green: 90, blue: 149)
-        fourthNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
         
         
         let moreController = UIViewController()
@@ -53,8 +49,7 @@ class CustomTabBarController: UITabBarController {
         let fifthNavigationController = UINavigationController(rootViewController: moreController)
         fifthNavigationController.title = "More"
         fifthNavigationController.tabBarItem.image = UIImage(named: "more_icon")
-        fifthNavigationController.navigationBar.barTintColor = UIColor.rgb(red: 51, green: 90, blue: 149)
-        fifthNavigationController.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName : UIColor.white]
+       
         
         viewControllers = [navigationController, secondNavigationController, thirdNavigationController, fourthNavigationController, fifthNavigationController]
         
@@ -68,8 +63,7 @@ class CustomTabBarController: UITabBarController {
         
         tabBar.layer.addSublayer(topBorder)
         tabBar.clipsToBounds = true
-        
-        
+ 
         
     }
     
